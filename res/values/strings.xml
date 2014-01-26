@@ -4,5 +4,8 @@
     <string name="app_name">Homework252-Lorenbak</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="tvTaskDetail_text">Task Details</string>
+    <string name="tvTasksListRowText">Task 01</string>
+    <string name="tvTaskDetailTitle_text">Task Name Details</string>
 
 </resources>
