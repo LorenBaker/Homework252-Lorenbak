@@ -1,18 +1,24 @@
 package com.lbconsulting.homework252_lorenbak;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.homework252_lorenbak.R;
 import com.lbconsulting.homework252_lorenbak.adapters.TasksListAdapter;
@@ -32,13 +38,64 @@ public class TasksListFragment extends ListFragment
 	private final int SORT_ORDER_LAST_MODIFIED = 1;
 
 	private int mTaskListSortOrder = SORT_ORDER_ALPHABETICAL;
-
-	/*String[] taskItems = new String[] { "Star Wars", "The Sting", "Star Trek", "Gone With The Wind",
-			"Saving Mr. Banks", "Hunger Games", "Who Shot Roger Rabbit", "Mary Poppins", "Jungle Book" };*/
+	private int mProposedTaskListSortOrder = mTaskListSortOrder;
 
 	// Container Activity must implement this interface
 	public interface OnTaskSelectedListener {
 		public void onTaskSelected(long Id);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		MyLog.i("TasksListFragment", "onCreateOptionsMenu");
+		// Inflate the menu; this adds items to the action bar if it is present.
+		inflater.inflate(R.menu.task_list, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		MyLog.i("TasksListFragment", "onOptionsItemSelected");
+		// handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_newTask:
+			Toast.makeText(getActivity(), "action_newTask", Toast.LENGTH_SHORT).show();
+			return true;
+
+		case R.id.action_sortTaskList:
+			ShowSortListDialog();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public void ShowSortListDialog() {
+		// Sort order options.
+		String[] sortOrderOptions = getResources().getStringArray(R.array.list_sort_options);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle(getString(R.string.sortListDialogTitle));
+		builder.setSingleChoiceItems(sortOrderOptions, mTaskListSortOrder,
+				new DialogInterface.OnClickListener() {
+					// When you click the radio button
+					@Override
+					public void onClick(DialogInterface dialog, int sortOrder) {
+						mProposedTaskListSortOrder = sortOrder;
+					}
+				});
+
+		builder.setPositiveButton(getString(R.string.btn_apply_text),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int item) {
+						if (mTaskListSortOrder != mProposedTaskListSortOrder) {
+							mTaskListSortOrder = mProposedTaskListSortOrder;
+							mLoaderManager.restartLoader(TASKS_LIST_LOADER_ID, null, mTasksListCallbacks);
+						}
+					}
+				});
+
+		builder.show();
 	}
 
 	@Override
@@ -59,6 +116,8 @@ public class TasksListFragment extends ListFragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		MyLog.i("TasksListFragment", "onCreate");
+
+		setHasOptionsMenu(true);
 
 		// set up tasks list adapter and loader
 		mLoaderManager = getLoaderManager();
@@ -83,8 +142,14 @@ public class TasksListFragment extends ListFragment
 	}
 
 	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		MyLog.i("TasksListFragment", "onViewCreated");
+		super.onViewCreated(view, savedInstanceState);
+	}
+
+	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
-		MyLog.i("TasksListFragment", "onListItemClick - position = " + position);
+		MyLog.i("TasksListFragment", "onListItemClick - pos = " + position + " Id = " + id);
 		mCallback.onTaskSelected(id);
 
 		super.onListItemClick(listView, view, position, id);
@@ -170,6 +235,7 @@ public class TasksListFragment extends ListFragment
 		SharedPreferences applicationStates = getActivity().getSharedPreferences("HW252", Context.MODE_PRIVATE);
 		// Set application states
 		mTaskListSortOrder = applicationStates.getInt("TaskListSortOrder", SORT_ORDER_ALPHABETICAL);
+		mLoaderManager.restartLoader(TASKS_LIST_LOADER_ID, null, mTasksListCallbacks);
 	}
 
 	@Override

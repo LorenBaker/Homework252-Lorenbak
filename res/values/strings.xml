@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Homework252-Lorenbak</string>
+    <string name="app_name">HW252-Lorenbak</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="tvTaskDetail_text">Task Details</string>
-    <string name="tvTasksListRowText">Task 01</string>
+    <string name="tvTaskDetail_text">No Task Selected</string>
+    <string name="tvTaskNameText">Task 01</string>
+    <string name="tvTaskLastModifiedText">1/2/2014 10:12:45 pm</string>
     <string name="tvTaskDetailTitle_text">Task Name Details</string>
+    <string name="action_newTask">Create New Task</string>
+    <string name="action_sortTaskList">Sort Task List</string>
+    <string name="action_deleteTask">Delete Task</string>
+    <string name="action_editTask">Edit Task</string>
+    <string name="addNewTaskDialogTitle">Add Task</string>
+    <string name="sortListDialogTitle">Sort Tasks By:</string>
+    <string name="btn_apply_text">Apply</string>
+    <string name="btn_cancel_text">Cancel</string>
+
+    <string-array name="list_sort_options">
+        <item>Task Title</item>
+        <item>Date Modified</item>
+    </string-array>
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+    </string-array>
 
 </resources>

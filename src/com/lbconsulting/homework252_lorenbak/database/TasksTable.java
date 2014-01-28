@@ -34,7 +34,7 @@ public class TasksTable {
 	public static final Uri CONTENT_URI = Uri.parse("content://" + HW252ContentProvider.AUTHORITY + "/" + CONTENT_PATH);
 
 	public static final String SORT_ORDER_TASK_NAME = COL_TASK_NAME + " ASC";
-	public static final String SORT_ORDER_LAST_MODIFIED = COL_DATE_CREATED + " DESC, " + SORT_ORDER_TASK_NAME;
+	public static final String SORT_ORDER_LAST_MODIFIED = COL_DATE_CREATED + " ASC, " + SORT_ORDER_TASK_NAME;
 
 	// Database creation SQL statements
 	private static final String CREATE_DATA_TABLE =
@@ -75,7 +75,10 @@ public class TasksTable {
 			// add between 1 and 15 seconds to the current time
 			// to provide different date created times
 			randomMillSeconds = minValue + (int) (Math.random() * ((maxValue - minValue) + 1));
-			sqlStatements.add(insertProjection + "(NULL, '" + item + "', 'Detail for " + item + "',"
+			sqlStatements.add(insertProjection + "(NULL, '" + item + "', 'Detail for " + item
+					+ "\n      ... more Detail for " + item
+					+ "\n             ... and more Detail for " + item
+					+ "',"
 					+ (currentDateTimeInMillis + randomMillSeconds) + ")");
 		}
 

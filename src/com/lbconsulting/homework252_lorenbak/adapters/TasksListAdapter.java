@@ -1,5 +1,8 @@
 package com.lbconsulting.homework252_lorenbak.adapters;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -24,12 +27,23 @@ public class TasksListAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context c, Cursor cursor) {
-		TextView tvTasksListRow = null;
-		tvTasksListRow = (TextView) view.findViewById(R.id.tvTasksListRow);
-		tvTasksListRow.setText(cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_NAME)));
-		/*tvTasksListRow.setTypeface(null, Typeface.ITALIC);
-		tvTasksListRow.setTextColor("#FF000000");*/
+		TextView tvTaskName = (TextView) view.findViewById(R.id.tvTaskName);
+		if (tvTaskName != null) {
+			tvTaskName.setText(cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_NAME)));
+		}
 
+		TextView tvTaskLastModified = (TextView) view.findViewById(R.id.tvTaskLastModified);
+		if (tvTaskLastModified != null) {
+
+			Calendar dateLastModified = Calendar.getInstance();
+			long dateCreated = cursor.getLong(cursor.getColumnIndexOrThrow(TasksTable.COL_DATE_CREATED));
+			dateLastModified.setTimeInMillis(dateCreated);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy: h:mm:ss.SSS a", java.util.Locale.getDefault());
+			String formatedDateLastModified = sdf.format(dateLastModified.getTime());
+
+			tvTaskLastModified.setText(formatedDateLastModified);
+		}
 	}
 
 	@Override

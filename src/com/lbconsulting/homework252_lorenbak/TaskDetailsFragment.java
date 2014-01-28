@@ -5,14 +5,45 @@ import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.homework252_lorenbak.R;
 import com.lbconsulting.homework252_lorenbak.database.TasksTable;
 
 public class TaskDetailsFragment extends Fragment {
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		//super.onCreateOptionsMenu(menu, inflater);
+		MyLog.i("TaskDetailsFragment", "onCreateOptionsMenu");
+		// Inflate the menu; this adds items to the action bar if it is present.
+		inflater.inflate(R.menu.task_details, menu);
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		MyLog.i("TaskDetailsFragment", "onOptionsItemSelected");
+		// handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_editTask:
+			Toast.makeText(getActivity(), "action_editTask", Toast.LENGTH_SHORT).show();
+			return true;
+
+		case R.id.action_deleteTask:
+			Toast.makeText(getActivity(), "action_deleteTask", Toast.LENGTH_SHORT).show();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
 	private long NO_SELECTED_TASK_ID = 0;
 	private long mSelectedTaskID = NO_SELECTED_TASK_ID;
@@ -33,24 +64,12 @@ public class TaskDetailsFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		MyLog.i("TaskDetailsFragment", "onCreate");
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+
 	}
 
 	public long getShownTaskID() {
-		long taskID = NO_SELECTED_TASK_ID;
-		if (mSelectedTaskID == NO_SELECTED_TASK_ID) {
-			Bundle args = getArguments();
-			if (args != null) {
-				taskID = args.getLong("SelectedTaskID", NO_SELECTED_TASK_ID);
-				mSelectedTaskID = taskID;
-			}
-			if (taskID <= NO_SELECTED_TASK_ID) {
-				MyLog.e("TaskDetailsFragment", "getShownTaskID; Invalid Id - Id = " + String.valueOf(taskID));
-			}
-		} else {
-			taskID = mSelectedTaskID;
-		}
-
-		return taskID;
+		return mSelectedTaskID;
 	}
 
 	public void ShowDetails(long taskID) {
@@ -60,7 +79,8 @@ public class TaskDetailsFragment extends Fragment {
 			if (tvTaskDetailTitle != null && tvTaskDetail != null) {
 				Cursor cursor = TasksTable.getTaskItem(getActivity(), taskID);
 				if (cursor != null) {
-					tvTaskDetailTitle.setText(cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_NAME))
+					tvTaskDetailTitle.setText("TITLE: "
+							+ cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_NAME))
 							+ " Detail");
 					tvTaskDetail.setText(cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_DETAIL)));
 					cursor.close();
@@ -73,7 +93,9 @@ public class TaskDetailsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		MyLog.i("TaskDetailsFragment", "onCreateView");
-		return super.onCreateView(inflater, container, savedInstanceState);
+
+		View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
+		return view;
 	}
 
 	@Override
@@ -92,6 +114,12 @@ public class TaskDetailsFragment extends Fragment {
 	public void onPause() {
 		MyLog.i("TaskDetailsFragment", "onPause");
 		super.onPause();
+	}
+
+	@Override
+	public void onDestroyView() {
+		MyLog.i("TaskDetailsFragment", "onDestroyView");
+		super.onDestroyView();
 	}
 
 	@Override
