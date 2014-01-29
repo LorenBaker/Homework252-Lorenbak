@@ -3,7 +3,7 @@ package com.lbconsulting.homework252_lorenbak;
 import android.util.Log;
 
 public class MyLog {
-	private static String TAG = "HW251";
+	private static String TAG = "HW252";
 
 	public static void d(String className, String msg) {
 		if (Log.isLoggable(TAG, Log.DEBUG)) {

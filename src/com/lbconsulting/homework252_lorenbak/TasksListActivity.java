@@ -35,13 +35,13 @@ public class TasksListActivity extends Activity
 			// create the fragment
 			mTasksListFragment = new TasksListFragment();
 			MyLog.i("TasksListACTIVITY", "onCreate. New TasksListFragment created.");
+			//		}
+			// replace the fragment
+			this.getFragmentManager().beginTransaction()
+					.add(R.id.fragmentTasksListPlaceholder, mTasksListFragment, "TasksListFragment")
+					.commit();
+			MyLog.i("TasksListACTIVITY", "onCreate. TasksListFragment add.");
 		}
-		// replace the fragment
-		this.getFragmentManager().beginTransaction()
-				.replace(R.id.fragmentTasksListPlaceholder, mTasksListFragment, "TasksListFragment")
-				.commit();
-		MyLog.i("TasksListACTIVITY", "onCreate. TasksListFragment replace.");
-
 		mTwoFragmentLayout = isTwoFragmentLayout();
 
 		if (mTwoFragmentLayout) {
@@ -52,12 +52,13 @@ public class TasksListActivity extends Activity
 				// create the fragment
 				mTaskDetailsFragment = new TaskDetailsFragment();
 				MyLog.i("TasksListACTIVITY", "onCreate. New TaskDetailsFragment created.");
+				//}
+				// replace the fragment
+				this.getFragmentManager().beginTransaction()
+						.add(R.id.fragmentTasksDetailsPlaceholder, mTaskDetailsFragment, "TaskDetailsFragment")
+						.commit();
+				MyLog.i("TasksListACTIVITY", "onCreate. TaskDetailsFragment add.");
 			}
-			// replace the fragment
-			this.getFragmentManager().beginTransaction()
-					.replace(R.id.fragmentTasksDetailsPlaceholder, mTaskDetailsFragment, "TaskDetailsFragment")
-					.commit();
-			MyLog.i("TasksListACTIVITY", "onCreate. TaskDetailsFragment replace.");
 		} // NOTE: handle starting TaskDetailsActivity at onResume
 	}
 
