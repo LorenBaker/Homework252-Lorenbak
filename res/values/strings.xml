@@ -13,19 +13,20 @@
     <string name="action_deleteTask">Delete Task</string>
     <string name="action_editTask">Edit Task</string>
     <string name="addNewTaskDialogTitle">Add Task</string>
+    <string name="editTaskDialogTitle">Edit Task</string>
+    <string name="deleteTaskDialogTitle">Permanently delete:</string>
     <string name="sortListDialogTitle">Sort Tasks By:</string>
     <string name="btn_apply_text">Apply</string>
     <string name="btn_cancel_text">Cancel</string>
+    <string name="btn_yes_text">Yes</string>
+    <string name="btn_no_text">No</string>
+    <string name="txtTaskNameHint">Task Title</string>
+    <string name="txtTaskDetailsHint">Task Detail</string>
 
     <string-array name="list_sort_options">
         <item>Task Title</item>
         <item>Date Modified</item>
     </string-array>
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-    </string-array>
+        <string name="action_addTestData">Add Test Data</string>
 
 </resources>

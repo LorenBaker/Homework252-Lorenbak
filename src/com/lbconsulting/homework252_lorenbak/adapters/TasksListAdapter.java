@@ -39,7 +39,7 @@ public class TasksListAdapter extends CursorAdapter {
 			long dateCreated = cursor.getLong(cursor.getColumnIndexOrThrow(TasksTable.COL_DATE_CREATED));
 			dateLastModified.setTimeInMillis(dateCreated);
 
-			SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy: h:mm:ss.SSS a", java.util.Locale.getDefault());
+			SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy: h:mm:ss a", java.util.Locale.getDefault());
 			String formatedDateLastModified = sdf.format(dateLastModified.getTime());
 
 			tvTaskLastModified.setText(formatedDateLastModified);

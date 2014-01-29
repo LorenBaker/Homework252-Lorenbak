@@ -17,8 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.homework252_lorenbak.R;
 import com.lbconsulting.homework252_lorenbak.adapters.TasksListAdapter;
@@ -58,11 +58,15 @@ public class TasksListFragment extends ListFragment
 		// handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_newTask:
-			Toast.makeText(getActivity(), "action_newTask", Toast.LENGTH_SHORT).show();
+			ShowAddNewTaskDialog();
 			return true;
 
 		case R.id.action_sortTaskList:
 			ShowSortListDialog();
+			return true;
+
+		case R.id.action_addTestData:
+			AddTestData();
 			return true;
 
 		default:
@@ -70,12 +74,25 @@ public class TasksListFragment extends ListFragment
 		}
 	}
 
-	public void ShowSortListDialog() {
+	private void AddTestData() {
+		// create 20 tasks for our list
+
+		String taskName;
+		String taskDetail;
+		long firstTaskAdded = 0;
+		for (int i = 1; i <= 20; i++) {
+			// pad task number so alphabetical sorting works properly 
+			taskName = "Task " + String.format("%02d", i);
+			taskDetail = "Detail description of \"" + taskName + "\".";
+			TasksTable.CreateNewTask(getActivity(), taskName, taskDetail);
+		}
+	}
+
+	private void ShowSortListDialog() {
 		// Sort order options.
-		String[] sortOrderOptions = getResources().getStringArray(R.array.list_sort_options);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(getString(R.string.sortListDialogTitle));
-		builder.setSingleChoiceItems(sortOrderOptions, mTaskListSortOrder,
+		builder.setTitle(R.string.sortListDialogTitle);
+		builder.setSingleChoiceItems(R.array.list_sort_options, mTaskListSortOrder,
 				new DialogInterface.OnClickListener() {
 					// When you click the radio button
 					@Override
@@ -88,6 +105,8 @@ public class TasksListFragment extends ListFragment
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int item) {
+						// set the sort order if the proposed sort order is 
+						// different from the current sort order
 						if (mTaskListSortOrder != mProposedTaskListSortOrder) {
 							mTaskListSortOrder = mProposedTaskListSortOrder;
 							mLoaderManager.restartLoader(TASKS_LIST_LOADER_ID, null, mTasksListCallbacks);
@@ -95,7 +114,38 @@ public class TasksListFragment extends ListFragment
 					}
 				});
 
+		builder.setNegativeButton(getString(R.string.btn_cancel_text), null);
+
 		builder.show();
+	}
+
+	private void ShowAddNewTaskDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle(getString(R.string.addNewTaskDialogTitle));
+
+		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View addNewTaskView = inflater.inflate(R.layout.dialog_add_new_task, null);
+		if (addNewTaskView != null) {
+			final EditText txtTaskName = (EditText) addNewTaskView.findViewById(R.id.txtTaskName);
+			final EditText txtTaskDetails = (EditText) addNewTaskView.findViewById(R.id.txtTaskDetails);
+
+			builder.setView(addNewTaskView);
+			builder.setPositiveButton(getString(R.string.btn_apply_text),
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int item) {
+							long newTaskID = TasksTable.CreateNewTask(getActivity(),
+									txtTaskName.getText().toString().trim(),
+									txtTaskDetails.getText().toString().trim());
+
+							mCallback.onTaskSelected(newTaskID);
+						}
+					});
+
+			builder.setNegativeButton(getString(R.string.btn_cancel_text), null);
+
+			builder.show();
+		}
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.lbconsulting.homework252_lorenbak.database;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.content.ContentResolver;
@@ -11,7 +10,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import com.lbconsulting.homework252_lorenbak.HW252Utilities;
 import com.lbconsulting.homework252_lorenbak.MyLog;
 import com.lbconsulting.homework252_lorenbak.database.content_provider.HW252ContentProvider;
 
@@ -49,7 +47,8 @@ public class TasksTable {
 	public static void onCreate(SQLiteDatabase database) {
 		database.execSQL(CREATE_DATA_TABLE);
 
-		String insertProjection = "insert into "
+		// Test data
+		/*String insertProjection = "insert into "
 				+ TABLE_TASKS
 				+ " ("
 				+ COL_ID + ", "
@@ -60,29 +59,31 @@ public class TasksTable {
 
 		Calendar rightNow = Calendar.getInstance();
 		long currentDateTimeInMillis = rightNow.getTimeInMillis();
+		// round current millisecond time to the nearest second 
+		currentDateTimeInMillis = ((currentDateTimeInMillis + 500) / 1000) * 1000;
 
 		ArrayList<String> sqlStatements = new ArrayList<String>();
 
 		// Task list data
 		String item;
-		int minValue = 1000; // 1 second
-		int maxValue = 15000; // 15 seconds
-		int randomMillSeconds;
+		int minValue = 1; // 1 second
+		int maxValue = 15; // 15 seconds
+		int randomSeconds;
 		// create 20 tasks for our list
 		for (int i = 0; i < 20; i++) {
 			// pad task number so alphabetical sorting works properly 
 			item = "Task " + String.format("%02d", i + 1);
 			// add between 1 and 15 seconds to the current time
 			// to provide different date created times
-			randomMillSeconds = minValue + (int) (Math.random() * ((maxValue - minValue) + 1));
+			randomSeconds = minValue + (int) (Math.random() * ((maxValue - minValue) + 1));
 			sqlStatements.add(insertProjection + "(NULL, '" + item + "', 'Detail for " + item
 					+ "\n      ... more Detail for " + item
 					+ "\n             ... and more Detail for " + item
 					+ "',"
-					+ (currentDateTimeInMillis + randomMillSeconds) + ")");
+					+ (currentDateTimeInMillis + (randomSeconds * 1000)) + ")");
 		}
 
-		HW252Utilities.execMultipleSQL(database, sqlStatements);
+		HW252Utilities.execMultipleSQL(database, sqlStatements);*/
 	}
 
 	public static void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {

@@ -1,7 +1,10 @@
 package com.lbconsulting.homework252_lorenbak;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,13 +13,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.homework252_lorenbak.R;
 import com.lbconsulting.homework252_lorenbak.database.TasksTable;
 
 public class TaskDetailsFragment extends Fragment {
+
+	private long NO_SELECTED_TASK_ID = 0;
+	private long mSelectedTaskID = NO_SELECTED_TASK_ID;
+	private String mTaskName = "";
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -33,11 +40,13 @@ public class TaskDetailsFragment extends Fragment {
 		// handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_editTask:
-			Toast.makeText(getActivity(), "action_editTask", Toast.LENGTH_SHORT).show();
+			ShowEditTaskDialog();
+			//Toast.makeText(getActivity(), "action_editTask", Toast.LENGTH_SHORT).show();
 			return true;
 
 		case R.id.action_deleteTask:
-			Toast.makeText(getActivity(), "action_deleteTask", Toast.LENGTH_SHORT).show();
+			ShowDeleteTaskDialog();
+			//Toast.makeText(getActivity(), "action_deleteTask", Toast.LENGTH_SHORT).show();
 			return true;
 
 		default:
@@ -45,8 +54,76 @@ public class TaskDetailsFragment extends Fragment {
 		}
 	}
 
-	private long NO_SELECTED_TASK_ID = 0;
-	private long mSelectedTaskID = NO_SELECTED_TASK_ID;
+	private void ShowEditTaskDialog() {
+		if (mSelectedTaskID > NO_SELECTED_TASK_ID) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(getString(R.string.editTaskDialogTitle));
+
+			LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View editTaskView = inflater.inflate(R.layout.dialog_add_new_task, null);
+			if (editTaskView != null) {
+				final EditText txtTaskName = (EditText) editTaskView.findViewById(R.id.txtTaskName);
+				final EditText txtTaskDetail = (EditText) editTaskView.findViewById(R.id.txtTaskDetails);
+
+				Cursor cursor = TasksTable.getTaskItem(getActivity(), mSelectedTaskID);
+				if (cursor != null) {
+					String taskName = cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_NAME));
+					String taskDetail = cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_DETAIL));
+					txtTaskName.setText(taskName);
+					txtTaskDetail.setText(taskDetail);
+					cursor.close();
+				}
+
+				builder.setView(editTaskView);
+				builder.setPositiveButton(getString(R.string.btn_apply_text),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int item) {
+								TasksTable.setTaskName(getActivity(), mSelectedTaskID,
+										txtTaskName.getText().toString().trim());
+
+								TasksTable.setTaskDetail(getActivity(), mSelectedTaskID,
+										txtTaskDetail.getText().toString().trim());
+								ShowDetails(mSelectedTaskID);
+							}
+						});
+
+				builder.setNegativeButton(getString(R.string.btn_cancel_text), null);
+
+				builder.show();
+			}
+		}
+	}
+
+	private void ShowDeleteTaskDialog() {
+		if (mSelectedTaskID > NO_SELECTED_TASK_ID) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			String lineSep = System.getProperty("line.separator");
+			String deleteTaskTitle = getString(R.string.deleteTaskDialogTitle) + lineSep;
+			//final String taskName;
+			Cursor cursor = TasksTable.getTaskItem(getActivity(), mSelectedTaskID);
+			if (cursor != null) {
+				mTaskName = cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_NAME));
+				deleteTaskTitle = deleteTaskTitle + mTaskName + " ?";
+				cursor.close();
+			}
+			builder.setTitle(deleteTaskTitle);
+
+			builder.setPositiveButton(getString(R.string.btn_yes_text),
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int item) {
+							TasksTable.DeleteTask(getActivity(), mSelectedTaskID);
+							mSelectedTaskID = NO_SELECTED_TASK_ID;
+							ShowTaskDeletedMessage(mTaskName);
+						}
+					});
+
+			builder.setNegativeButton(getString(R.string.btn_no_text), null);
+
+			builder.show();
+		}
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -79,14 +156,22 @@ public class TaskDetailsFragment extends Fragment {
 			if (tvTaskDetailTitle != null && tvTaskDetail != null) {
 				Cursor cursor = TasksTable.getTaskItem(getActivity(), taskID);
 				if (cursor != null) {
-					tvTaskDetailTitle.setText("TITLE: "
-							+ cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_NAME))
-							+ " Detail");
+					tvTaskDetailTitle.setText("TASK: "
+							+ cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_NAME)));
 					tvTaskDetail.setText(cursor.getString(cursor.getColumnIndexOrThrow(TasksTable.COL_TASK_DETAIL)));
 					cursor.close();
 					mSelectedTaskID = taskID;
 				}
 			}
+		}
+	}
+
+	private void ShowTaskDeletedMessage(String taskName) {
+		TextView tvTaskDetailTitle = (TextView) getView().findViewById(R.id.tvTaskDetailTitle);
+		TextView tvTaskDetail = (TextView) getView().findViewById(R.id.tvTaskDetail);
+		if (tvTaskDetailTitle != null && tvTaskDetail != null) {
+			tvTaskDetailTitle.setText("");
+			tvTaskDetail.setText(taskName + " DELETED.");
 		}
 	}
 
