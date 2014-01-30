@@ -79,7 +79,6 @@ public class TasksListFragment extends ListFragment
 
 		String taskName;
 		String taskDetail;
-		long firstTaskAdded = 0;
 		for (int i = 1; i <= 20; i++) {
 			// pad task number so alphabetical sorting works properly 
 			taskName = "Task " + String.format("%02d", i);
@@ -176,8 +175,6 @@ public class TasksListFragment extends ListFragment
 		setListAdapter(mTasksListAdapter);
 
 		mTasksListCallbacks = this;
-		// Note: using null for the cursor. The masterList and listTitle cursors
-		// loaded via onLoadFinished.
 		mLoaderManager.initLoader(TASKS_LIST_LOADER_ID, null, mTasksListCallbacks);
 
 	}
@@ -269,6 +266,7 @@ public class TasksListFragment extends ListFragment
 	public void onActivityCreated(Bundle savedInstanceState) {
 		MyLog.i("TasksListFragment", "onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
+		this.getListView().setSelector(R.drawable.list_view_selector);
 	}
 
 	@Override
