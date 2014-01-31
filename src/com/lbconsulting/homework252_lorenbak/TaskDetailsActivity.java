@@ -65,6 +65,7 @@ public class TaskDetailsActivity extends Activity {
 		SharedPreferences preferences = getSharedPreferences("HW252", MODE_PRIVATE);
 		SharedPreferences.Editor applicationStates = preferences.edit();
 		// indicates that the last portrait activity was this details activity.
+		// used to load this TaskDetails Activity when returning from landscape orientation 
 		applicationStates.putInt("LastPortraitActivty", DETAILS_ACTIVITY);
 		applicationStates.commit();
 	}

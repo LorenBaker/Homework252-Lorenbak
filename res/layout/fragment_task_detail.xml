@@ -16,7 +16,8 @@
         android:gravity="left"
         android:text="@string/tvTaskDetailTitle_text"
         android:textColor="#FFFFFFFF"
-        android:textSize="18sp" >
+        android:textSize="18sp"
+        android:textStyle="italic" >
     </TextView>
 
     <TextView

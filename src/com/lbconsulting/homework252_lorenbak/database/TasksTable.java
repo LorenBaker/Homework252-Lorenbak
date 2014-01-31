@@ -139,7 +139,6 @@ public class TasksTable {
 		String selection = null;
 		String selectionArgs[] = null;
 
-		ContentResolver cr = context.getContentResolver();
 		CursorLoader cursorLoader = null;
 		try {
 			cursorLoader = new CursorLoader(context, uri, projection, selection, selectionArgs, sortOrder);

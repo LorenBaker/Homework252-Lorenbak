@@ -4,10 +4,10 @@
     <string name="app_name">HW252-Lorenbak</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="tvTaskDetail_text">No Task Selected</string>
+    <string name="tvTaskDetail_text"></string>
     <string name="tvTaskNameText">Task 01</string>
     <string name="tvTaskLastModifiedText">1/2/2014 10:12:45 pm</string>
-    <string name="tvTaskDetailTitle_text">Task Name Details</string>
+    <string name="tvTaskDetailTitle_text"></string>
     <string name="action_newTask">Create New Task</string>
     <string name="action_sortTaskList">Sort Task List</string>
     <string name="action_deleteTask">Delete Task</string>
@@ -27,6 +27,7 @@
         <item>Task Title</item>
         <item>Date Modified</item>
     </string-array>
-        <string name="action_addTestData">Add Test Data</string>
+
+    <string name="action_addTestData">Add Test Data</string>
 
 </resources>

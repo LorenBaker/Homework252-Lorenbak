@@ -29,14 +29,13 @@ public class TasksListActivity extends Activity
 		MyLog.i("TasksListACTIVITY", "onCreate");
 		setContentView(R.layout.activity_task_list);
 
-		// Add TitleListFragment
+		// Add TasksListFragment
 		mTasksListFragment = (TasksListFragment) this.getFragmentManager().findFragmentByTag("TasksListFragment");
 		if (mTasksListFragment == null) {
 			// create the fragment
 			mTasksListFragment = new TasksListFragment();
 			MyLog.i("TasksListACTIVITY", "onCreate. New TasksListFragment created.");
-			//		}
-			// replace the fragment
+			// add the fragment to the Activity
 			this.getFragmentManager().beginTransaction()
 					.add(R.id.fragmentTasksListPlaceholder, mTasksListFragment, "TasksListFragment")
 					.commit();
@@ -52,8 +51,7 @@ public class TasksListActivity extends Activity
 				// create the fragment
 				mTaskDetailsFragment = new TaskDetailsFragment();
 				MyLog.i("TasksListACTIVITY", "onCreate. New TaskDetailsFragment created.");
-				//}
-				// replace the fragment
+				// add the fragment to the Activity
 				this.getFragmentManager().beginTransaction()
 						.add(R.id.fragmentTasksDetailsPlaceholder, mTaskDetailsFragment, "TaskDetailsFragment")
 						.commit();
